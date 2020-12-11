@@ -42,7 +42,7 @@ namespace DotControl.CLibrary.Interfaces
             _logger.Log("Finished processing of the balance");
         }
 
-        private async void RefreshBalanceAsync()
+        public async void RefreshBalanceAsync()
         {            
             await Task.Run(() =>
             {
@@ -53,13 +53,13 @@ namespace DotControl.CLibrary.Interfaces
         }
         public double GetCurrentAccountBalance(Guid accountId)
         {
-            return 100;
+            return 10;
             //throw new NotImplementedException();
         }
 
         public double GetAccountBalanceMultiplier()
         {
-            return 100;
+            return 10;
             //throw new NotImplementedException();
         }
     }

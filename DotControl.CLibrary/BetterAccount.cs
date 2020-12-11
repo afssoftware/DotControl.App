@@ -14,6 +14,7 @@ namespace DotControl.CLibrary
         private readonly IAccountBalanceService _accountBalanceService;
         private readonly ISettingsProvider _settingsProvider;
         public double Balance { get; private set; }
+        
         public BetterAccount(ILogger logger, Guid accountId,
         IAccountBalanceService accountBalanceService,
         ISettingsProvider settingsProvider)
@@ -34,16 +35,24 @@ namespace DotControl.CLibrary
             _logger.Log("Finished processing of the balance");
             Console.WriteLine("---");
         }
+        public async void RefreshBalanceAsync()
+        {
+            await Task.Run(() =>
+            {
+                Balance = _accountBalanceService.GetCurrentAccountBalance(_accountId)
+                    * _settingsProvider.GetAccountBalanceMultiplier();
+            });
 
+        }
         public double GetCurrentAccountBalance(Guid accountId)
         {
-            return 100;
+            return 10;
             //throw new NotImplementedException();
         }
 
         public double GetAccountBalanceMultiplier()
         {
-            return 100;
+            return 10;
             //throw new NotImplementedException();
         }
     }

@@ -16,7 +16,8 @@ namespace DotControl.Tests
         private readonly Guid _accountId;
         private readonly IAccountBalanceService _accountBalanceService;
         private readonly ISettingsProvider _settingsProvider;
-        
+        public double Balance_ { get; private set; }
+        string _customMessage = "custom message error";
         public AccountTests(ILogger logger, Guid accountId,
         IAccountBalanceService accountBalanceService,
         ISettingsProvider settingsProvider)
@@ -27,13 +28,18 @@ namespace DotControl.Tests
             _settingsProvider = settingsProvider;
         }
 
+        public Guid GuidGeneratorTest()
+        {
+           Guid  output =  Guid.NewGuid();
+            return output;
+        }
       
         [Fact(DisplayName = "Call RefreshBalance function")]
         public void RefreshBalance_SimpleValuesShouldBlance()
         {
             // arrange
-            double expected;
-            Guid obj = Guid.NewGuid();
+
+            Guid obj = GuidGeneratorTest();
             Console.WriteLine("New Guid is " + obj.ToString());
            
             // act
@@ -42,18 +48,30 @@ namespace DotControl.Tests
 
 
             // assert
-           // Assert.Equal(expected, actual.Balance);
+            Assert.Equal(expected:0, actual.Balance);
         }
 
         
-        [Fact(DisplayName = "Call RefreshBalance Async")]
-        public void RefreshBalanceAsync__SimpleValuesShouldBlanceAsync()
+        [Fact(DisplayName = "Call RefreshBalance Async and return errors")]
+        public async void RefreshBalanceAsync__SimpleValuesShouldBlanceAsync()
         {
             // arrange
-
+            Exception ex = await Record.ExceptionAsync(() => ThrowAnError());
             // act
+            await Task.Run(() =>
+            {
+                Balance_ = _accountBalanceService.GetCurrentAccountBalance(_accountId)
+                    * _settingsProvider.GetAccountBalanceMultiplier();
+            });
 
             // assert
+            Assert.Equal(_customMessage, ex.Message);
+
+        }
+
+        private Task ThrowAnError()
+        {
+            throw new NotImplementedException();
         }
     }
 }
