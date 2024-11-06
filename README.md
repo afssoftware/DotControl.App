@@ -1,6 +1,6 @@
 # DotControl.App
 Readme:
-This project is created as assessment for DotContol.
+This project is created as an internal project.
 Here is the description of the solution and the references.
 
  
